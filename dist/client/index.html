@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#071621">
+  <meta name="description" content="Analiza una URL, consulta si ya fue reportada y ayuda a alertar a la comunidad sobre posibles fraudes, phishing o suplantaciones digitales.">
+  <meta name="application-name" content="AlertaURL OSINT">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="AlertaURL OSINT">
+  <title>AlertaURL OSINT | Analiza y reporta enlaces sospechosos</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect rx='16' width='64' height='64' fill='%23071621'/%3E%3Cpath d='M9 32s9-14 23-14 23 14 23 14-9 14-23 14S9 32 9 32Z' fill='none' stroke='%2369e6d1' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='7' fill='%2369e6d1'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css?v=18">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="AlertaURL OSINT por Educa OSINT">
+      <img src="assets/logo.png" alt="Logo de Educa OSINT">
+      <span><b>ALERTAURL OSINT</b><small>Una herramienta gratuita de Educa OSINT</small></span>
+    </a>
+    <nav aria-label="Navegación principal">
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#guia">Guía rápida</a>
+      <a href="/privacidad/">Privacidad</a>
+    </nav>
+    <div class="header-actions">
+      <a class="header-button" href="https://github.com/educaosint/alertaurl-osint" target="_blank" rel="noopener">⌘ Código abierto</a>
+      <button class="header-button install-button" id="install-app" type="button">⇩ Instalar app</button>
+    </div>
+  </header>
+
+  <main id="inicio">
+    <section class="intro">
+      <p class="eyebrow"><span></span> ANALIZA, VERIFICA Y REPORTA</p>
+      <h1>Enlaces sospechosos,<br><em>señales claras.</em></h1>
+      <p class="lead">Analiza una URL, consulta si ya fue reportada y ayuda a alertar a la comunidad sobre posibles fraudes, phishing o suplantaciones digitales.</p>
+    </section>
+
+    <section class="scanner" aria-labelledby="scanner-title">
+      <div class="scanner-head">
+        <div><span class="live-dot"></span><span>ANÁLISIS EDUCATIVO</span></div>
+        <span>Sin registro · Sin almacenar datos</span>
+      </div>
+      <div class="scanner-body">
+        <h2 id="scanner-title">Pega la dirección que recibiste</h2>
+        <form id="risk-form">
+          <label class="field-label" for="target">URL, perfil o usuario</label>
+          <div class="target-row">
+            <input id="target" name="target" type="text" autocomplete="off" placeholder="https://tienda.com o instagram.com/usuario" required>
+            <button class="primary" id="analyze-button" type="submit">Analizar ahora <span>→</span></button>
+            <button class="ghost clear-button" id="clear-button" type="button">Limpiar</button>
+          </div>
+          <p class="hint">No necesitas conocimientos técnicos. Nunca escribas contraseñas, códigos, tarjetas ni documentos personales.</p>
+          <div class="auto-checks" aria-label="Comprobaciones automáticas">
+            <span data-auto-check="redirects">○ Redirecciones</span><span data-auto-check="link">○ Tipo de enlace</span><span data-auto-check="dns">○ Dominio y DNS</span><span data-auto-check="content">○ Apuestas y armas</span><span data-auto-check="popups">○ Pop-ups engañosos</span><span data-auto-check="brands">○ Bancos y marcas</span>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="result" id="result" aria-live="polite" hidden>
+      <div class="score-ring" id="score-ring"><strong id="score">0</strong><span>/100</span></div>
+      <div class="result-copy">
+        <div class="result-status-row">
+          <p class="eyebrow" id="risk-label">RESULTADO</p>
+          <span class="reported-badge" id="reported-badge" hidden>✓ URL ya reportada</span>
+          <button class="view-existing-action" id="view-existing-report" type="button" hidden>👁 Ver reporte existente</button>
+        </div>
+        <h2 id="result-title">Riesgo por determinar</h2>
+        <p id="result-summary"></p>
+        <div class="analysis-meta" id="analysis-meta"></div>
+        <div id="signals" class="signals"></div>
+        <details class="detail-panel" id="detail-panel" hidden>
+          <summary class="detail-heading">
+            <div><p class="eyebrow">INFORMACIÓN ENCONTRADA</p><h3>Detalle técnico del análisis</h3></div>
+            <span><b id="detail-count"></b><i>Ver detalles</i></span>
+          </summary>
+          <div class="detail-list" id="detail-list"></div>
+        </details>
+        <div class="result-actions">
+          <button type="button" class="secondary" id="copy-report">Copiar informe</button>
+          <button type="button" class="secondary download-button" id="download-report">Descargar informe</button>
+          <button type="button" class="ghost" id="new-analysis">Nueva verificación</button>
+          <button class="secondary" id="show-report-form" type="button">Reportar una página</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="community" id="reportes">
+      <div class="section-heading">
+        <div><p class="eyebrow">ALERTAS DE LA COMUNIDAD</p><h2>Últimas páginas reportadas</h2></div>
+      </div>
+      <p class="community-note">Los reportes son aportes preventivos de la comunidad y todavía pueden estar sin verificar. No constituyen por sí solos una declaración legal.</p>
+      <div class="report-carousel">
+        <button class="ticker-control ticker-prev" id="ticker-prev" type="button" aria-label="Ver reportes anteriores">‹</button>
+        <div class="report-ticker" id="report-ticker" aria-label="Páginas reportadas recientemente" tabindex="0">
+          <div class="report-track" id="report-track"><div class="report-loading">Cargando reportes recientes…</div></div>
+        </div>
+        <button class="ticker-control ticker-next" id="ticker-next" type="button" aria-label="Ver reportes siguientes">›</button>
+        <div class="ticker-hint" aria-hidden="true">Posa el cursor sobre una flecha para desplazarte</div>
+      </div>
+      <form class="report-form" id="report-form" hidden>
+        <div>
+          <label for="report-url">Dirección sospechosa</label>
+          <input id="report-url" type="url" placeholder="https://ejemplo.com/pagina" required>
+        </div>
+        <div>
+          <label for="report-category">Tipo de alerta</label>
+          <select id="report-category">
+            <option value="suplantacion">Suplantación de identidad</option>
+            <option value="phishing">Robo de credenciales / phishing</option>
+            <option value="estafa">Posible estafa</option>
+            <option value="publicidad_enganosa">Publicidad engañosa</option>
+            <option value="apuestas">Apuestas</option>
+            <option value="armas">Venta de armas</option>
+            <option value="contenido_ilicito">Posible contenido ilícito</option>
+            <option value="otro">Otra señal</option>
+          </select>
+        </div>
+        <div class="report-notes">
+          <label for="report-notes">¿Qué observaste? <span>(sin datos personales)</span></label>
+          <textarea id="report-notes" maxlength="500" placeholder="Describe brevemente la marca suplantada, el mensaje recibido o la información solicitada."></textarea>
+        </div>
+        <div class="report-submit">
+          <button class="primary" type="submit">Enviar reporte</button>
+          <div id="report-message" class="report-message" role="status"></div>
+        </div>
+      </form>
+    </section>
+
+    <dialog class="report-dialog" id="report-dialog" aria-labelledby="report-dialog-title">
+      <div class="report-dialog-head">
+        <div><p class="eyebrow">INFORME DE LA PÁGINA REPORTADA</p><h2 id="report-dialog-title">Revisión comunitaria</h2></div>
+        <button class="dialog-close" id="close-report-dialog" type="button" aria-label="Cerrar informe">×</button>
+      </div>
+      <div class="report-dialog-body" id="report-dialog-body"></div>
+    </dialog>
+
+    <section class="steps" id="como-funciona">
+      <div class="section-heading"><p class="eyebrow">CÓMO FUNCIONA</p><h2>La herramienta hace la revisión por ti</h2></div>
+      <div class="step-grid">
+        <article><span>01</span><h3>Reconoce el enlace</h3><p>Identifica automáticamente si es una web, Instagram, Facebook u otro perfil.</p></article>
+        <article><span>02</span><h3>Comprueba señales</h3><p>Revisa HTTPS, dominio, DNS, antigüedad disponible, palabras engañosas y variantes sospechosas.</p></article>
+        <article><span>03</span><h3>Explica el riesgo</h3><p>Muestra qué encontró, qué no pudo confirmar y qué debes hacer antes de pagar.</p></article>
+      </div>
+    </section>
+
+    <section class="guide" id="guia">
+      <div><p class="eyebrow">GUÍA RÁPIDA</p><h2>Detente si encuentras estas señales</h2></div>
+      <ul>
+        <li><span>!</span><div><b>Te piden pagar a una persona distinta</b><small>El nombre del beneficiario no coincide con el negocio.</small></div></li>
+        <li><span>!</span><div><b>Te envían a recoger en una tienda oficial</b><small>El supuesto vendedor cobra, pero no pertenece a esa tienda.</small></div></li>
+        <li><span>!</span><div><b>Crean urgencia o una oferta imposible</b><small>“Solo hoy”, “última unidad” o precios muy por debajo del mercado.</small></div></li>
+        <li><span>!</span><div><b>Solicitan códigos, claves o compartir pantalla</b><small>Ningún comercio legítimo necesita esas credenciales.</small></div></li>
+      </ul>
+    </section>
+
+    <section class="privacy" id="privacidad-resumen">
+      <div class="shield">◈</div><div><p class="eyebrow">PRIVACIDAD PRIMERO</p><h2>El análisis no se convierte en reporte automáticamente</h2><p>La dirección analizada se usa para realizar comprobaciones técnicas. Solo se conserva cuando el usuario decide enviarla mediante “Reportar una página”. No solicitamos nombres, correos ni otros datos personales. El resultado orienta; no certifica que una cuenta o web sea legítima.</p></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-brand"><img src="assets/logo.png" alt=""><div><b>Una herramienta educativa de Educa OSINT</b><small>Aprende inteligencia de fuentes abiertas.</small></div></div>
+    <div class="footer-links"><div class="legal-links"><a href="/privacidad/">Privacidad</a><a href="/terminos/">Términos</a><a href="/creditos/">Créditos</a></div><div class="social"><a href="https://www.instagram.com/educaosint/" target="_blank" rel="noopener">@educaosint</a><span>·</span><a href="https://www.instagram.com/josiaspool/" target="_blank" rel="noopener">Diseñado y creado por Josias Pool @josiaspool</a></div></div>
+  </footer>
+  <script src="assets/app.js?v=18"></script>
+</body>
+</html>

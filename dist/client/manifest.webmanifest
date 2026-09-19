@@ -1,0 +1,16 @@
+{
+  "name": "AlertaURL OSINT | Analiza y reporta enlaces sospechosos",
+  "short_name": "AlertaURL OSINT",
+  "description": "Analiza una URL, consulta si ya fue reportada y ayuda a alertar a la comunidad sobre posibles fraudes, phishing o suplantaciones digitales.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#06131d",
+  "theme_color": "#071621",
+  "lang": "es",
+  "categories": ["education", "security", "utilities"],
+  "icons": [
+    {"src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

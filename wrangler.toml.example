@@ -1,0 +1,13 @@
+name = "alertaurl-osint"
+main = "dist/server/index.js"
+compatibility_date = "2026-09-19"
+
+[assets]
+directory = "dist/client"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "alertaurl-osint"
+database_id = "REEMPLAZAR_CON_EL_ID_DE_D1"
+migrations_dir = "drizzle"
